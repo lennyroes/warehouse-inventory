@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Inventory System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Warehouse Inventory System</h1>
+            <div class="controls">
+                <input type="text" id="search" placeholder="Search items...">
+                <button id="add-item">Add Item</button>
+                <button id="record-output">Record Output</button>
+                <button id="transfer-item">Transfer Items</button>
+                <button id="view-reports">View Reports</button>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="current-stock">Current Stock</button>
+            <button class="tab-btn" data-tab="transactions">Transaction History</button>
+        </div>
+
+        <div class="tab-content active" id="current-stock">
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Total Items</h3>
+                    <p id="total-items">0</p>
+                </div>
+                <div class="card">
+                    <h3>Testers</h3>
+                    <p id="tester-count">0</p>
+                </div>
+                <div class="card">
+                    <h3>Org</h3>
+                    <p id="org-count">0</p>
+                </div>
+                <div class="card">
+                    <h3>Giftsets</h3>
+                    <p id="giftset-count">0</p>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table">
+                    <!-- Items will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="transactions">
+            <div class="filters">
+                <select id="transaction-type">
+                    <option value="all">All Transactions</option>
+                    <option value="input">Input Only</option>
+                    <option value="output">Output Only</option>
+                    <option value="transfer">Transfers Only</option>
+                </select>
+                <select id="transaction-location">
+                    <option value="all">All Locations</option>
+                    <option value="House">House</option>
+                    <option value="Top Floor">Top Floor</option>
+                    <option value="Mall">Mall</option>
+                </select>
+                <input type="date" id="transaction-date">
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Item Code</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Qty</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-table">
+                    <!-- Transactions will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Item Modal -->
+    <div id="item-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Add New Item</h2>
+            <form id="item-form">
+                <input type="hidden" id="item-id">
+                <div class="form-group">
+                    <label for="item-code">Item Code*</label>
+                    <input type="text" id="item-code" required>
+                </div>
+                <div class="form-group">
+                    <label for="item-name">Item Name*</label>
+                    <input type="text" id="item-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="item-category">Category*</label>
+                    <select id="item-category" required>
+                        <option value="">Select category</option>
+                        <option value="Tester">Tester</option>
+                        <option value="Org">Org</option>
+                        <option value="Giftset">Giftset</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="item-quantity">Quantity*</label>
+                    <input type="number" id="item-quantity" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="item-location">Location*</label>
+                    <select id="item-location" required>
+                        <option value="">Select location</option>
+                        <option value="House">House</option>
+                        <option value="Top Floor">Top Floor</option>
+                        <option value="Mall">Mall</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="item-notes">Notes</label>
+                    <textarea id="item-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Output Modal -->
+    <div id="output-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Record Item Output</h2>
+            <form id="output-form">
+                <div class="form-group">
+                    <label for="output-item">Item*</label>
+                    <select id="output-item" required>
+                        <option value="">Select item</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="output-quantity">Quantity*</label>
+                    <input type="number" id="output-quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="output-from-location">From Location*</label>
+                    <select id="output-from-location" required>
+                        <option value="">Select location</option>
+                        <option value="House">House</option>
+                        <option value="Top Floor">Top Floor</option>
+                        <option value="Mall">Mall</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="output-notes">Notes</label>
+                    <textarea id="output-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Record Output</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="transfer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Transfer Items Between Locations</h2>
+            <form id="transfer-form">
+                <div class="form-group">
+                    <label for="transfer-item-select">Item*</label>
+                    <select id="transfer-item-select" required>
+                        <option value="">Select item</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-quantity">Quantity*</label>
+                    <input type="number" id="transfer-quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-from">From Location*</label>
+                    <select id="transfer-from" required>
+                        <option value="">Select location</option>
+                        <option value="House">House</option>
+                        <option value="Top Floor">Top Floor</option>
+                        <option value="Mall">Mall</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-to">To Location*</label>
+                    <select id="transfer-to" required>
+                        <option value="">Select location</option>
+                        <option value="House">House</option>
+                        <option value="Top Floor">Top Floor</option>
+                        <option value="Mall">Mall</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-notes">Notes</label>
+                    <textarea id="transfer-notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Confirm Transfer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reports Modal -->
+    <div id="reports-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Inventory Reports</h2>
+            <div class="report-options">
+                <button id="stock-report">Current Stock Report</button>
+                <button id="transaction-report">Transaction History</button>
+                <button id="category-report">Category Summary</button>
+                <button id="location-report">Location Summary</button>
+            </div>
+            <div id="report-results">
+                <!-- Report results will be displayed here -->
+            </div>
+            <button id="export-report">Export to CSV</button>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
